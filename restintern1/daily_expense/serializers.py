@@ -1,3 +1,4 @@
+import bson
 from rest_framework import serializers
 from bson.decimal128 import Decimal128
 from daily_expense.models import Expense
@@ -30,11 +31,7 @@ class TotalAmountbyCategorySerializer(serializers.Serializer):
     category = serializers.CharField()
     total_amount = serializers.DecimalField(max_digits=50, decimal_places=2)
 
-    # def to_representation(self, instance):
-    #     data = super().to_representation(instance)
-    #     # Convert Decimal128 to float for serialization
-    #     data['total_amount'] = float(instance['total_amount'])
-    #     return data
+
 
 
 class YearlyReportSerializer(serializers.Serializer):

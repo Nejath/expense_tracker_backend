@@ -4,6 +4,7 @@
 from django.shortcuts import render
 from rest_framework import generics, mixins, status
 from bson.decimal128 import Decimal128
+
 from decimal import Decimal
 from daily_expense.serializers import ExpenseSerializer,CurrentMonthExpenseSerializer,TotalAmountbyCategorySerializer,\
     YearlyReportSerializer,MonthReportSerializer
@@ -139,19 +140,20 @@ class RecentTransactionsView(generics.ListCreateAPIView):
         return Expense.objects.filter(user=user).order_by('-date_of_transaction')[:5]
 
 
-class TotalAmountByCategoryView(generics.ListCreateAPIView):
-    serializer_class = TotalAmountbyCategorySerializer
+class TotalAmountByCategoryView(APIView):
     permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
+    def get(self, request):
         user = self.request.user
-        queryset = (
-            Expense.objects
-            .filter(user=user)
-            .values('category')
-            .annotate(total_amount=Sum('amount_spent'))
-        )
-        return queryset
+        categories = Expense.objects.filter(user=user)
+        total_expenses = {}
+
+        for i in categories:
+            if i.category in total_expenses:
+                total_expenses[i.category] += Decimal(str(i.amount_spent))
+            else:
+                total_expenses[i.category]=Decimal(str(i.amount_spent))
+
+        return Response(total_expenses)
 
 class PaginationExpenseListView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
