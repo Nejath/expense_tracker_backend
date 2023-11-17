@@ -1,8 +1,6 @@
 from app1.models import CustomUser
 
-from django.db import models
 from djongo import models
-from django.db.models import Sum, F
 from django.utils import timezone
 
 # from django.contrib.auth import get_user_model

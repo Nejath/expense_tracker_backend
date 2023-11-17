@@ -27,11 +27,10 @@ class ExpenseSerializer(serializers.ModelSerializer):
 class CurrentMonthExpenseSerializer(serializers.Serializer):
     total_expense=serializers.DecimalField(max_digits=50,decimal_places=2)
 
+
 class TotalAmountbyCategorySerializer(serializers.Serializer):
     category = serializers.CharField()
     total_amount = serializers.DecimalField(max_digits=50, decimal_places=2)
-
-
 
 
 class YearlyReportSerializer(serializers.Serializer):
@@ -39,6 +38,7 @@ class YearlyReportSerializer(serializers.Serializer):
     monthly_expenses = serializers.DictField(
         child=serializers.DecimalField(max_digits=10, decimal_places=2)
     )
+
 
 class MonthReportSerializer(serializers.Serializer):
     year = serializers.IntegerField()

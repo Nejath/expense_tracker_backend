@@ -2,29 +2,27 @@
 #from django.utils import timezone
 
 from django.shortcuts import render
-from rest_framework import generics, mixins, status
 from bson.decimal128 import Decimal128
+
+from rest_framework import generics, mixins, status
 
 from decimal import Decimal
 from daily_expense.serializers import ExpenseSerializer,CurrentMonthExpenseSerializer,TotalAmountbyCategorySerializer,\
     YearlyReportSerializer,MonthReportSerializer
 
-from rest_framework.permissions import IsAuthenticated
-
 from daily_expense.models import Expense
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
-
 
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Q
 
-
 from daily_expense.pagination import StandardResultsSetPagination
 
-from datetime import datetime,date,timedelta
+from datetime import datetime,timedelta,date
 import calendar
-from django.db.models import Sum,F
+
 from rest_framework import generics
 from rest_framework.response import Response
 # Create your views here.
@@ -42,10 +40,6 @@ class Addexpense(mixins.ListModelMixin,mixins.CreateModelMixin,generics.GenericA
         else:
             return response
         #return self.create(request)
-
-
-
-
 
 
 
@@ -70,7 +64,6 @@ class CurrentMonthExpenseView(APIView):
 
         serializer = CurrentMonthExpenseSerializer({'total_expense': total_expense})
         return Response(serializer.data, status=status.HTTP_200_OK)
-
 
 
 class Editexpense(mixins.RetrieveModelMixin,mixins.UpdateModelMixin,mixins.DestroyModelMixin,generics.GenericAPIView):
@@ -155,6 +148,7 @@ class TotalAmountByCategoryView(APIView):
 
         return Response(total_expenses)
 
+
 class PaginationExpenseListView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = ExpenseSerializer
@@ -163,8 +157,6 @@ class PaginationExpenseListView(generics.ListAPIView):
     def get_queryset(self):
         user = self.request.user
         return Expense.objects.filter(user=user)
-
-
 
 
 
@@ -235,8 +227,6 @@ class MonthExpenseReportsView(APIView):
             date_of_transaction__gte=datetime(selected_year, selected_month, 1),
             date_of_transaction__lt=datetime(selected_year, selected_month + 1, 1)
         )
-
-
 
 
         # Calculate daily expenses
